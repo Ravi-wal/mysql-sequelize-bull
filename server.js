@@ -2,13 +2,31 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const Arena = require('bull-arena');
+const Bull = require('bull');
+
 const app = express();
+const arenaConfig = Arena({
+  Bull,
+  queues: [
+    {
+      name: "waltutorialsMail",
+      hostId: "bull",
+      redis: {
+        port: "19658",
+        host: "redis-19658.c82.us-east-1-2.ec2.cloud.redislabs.com",
+        password: '1gyFqYQVBSgTvPZiArXNj9YRFAx2ckr4'
+      },
+    }
+  ],
+},
+{
+  basePath: '/arena',
+  disableListen: true
+});
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 app.use(bodyParser.json());
@@ -30,6 +48,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to WAL Tutorials." });
 });
 
+app.use('/', arenaConfig);
 require("./app/routes/turorial.routes")(app);
 
 // set port, listen for requests

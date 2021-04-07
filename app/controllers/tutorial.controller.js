@@ -1,7 +1,7 @@
 const db = require("../models");
 const Tutorial = db.tutorials;
 const Op = db.Sequelize.Op;
-const bullQueue = require("./bull.queue");
+const bullQueue = require("./bull.jobs");
 
 exports.create = async (req, res) => {
   if (!req.body.title) {
